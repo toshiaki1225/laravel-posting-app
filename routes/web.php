@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PostController;
+use Illuminate\Auth\Events\Verified;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,10 +16,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+/*
 Route::get('/', function () {
     return view('welcome');
 });
+Route::get('/', [PostController::class, 'index'])->middleware(['auth','verified'])->name('post.index');
 
+*/
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -28,4 +33,26 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+
 require __DIR__.'/auth.php';
+
+// Route::get('/posts', [PostController::class, 'index'])->middleware(['auth', 'verified'])->name('posts.index');
+
+// Route::get('/posts/create', [PostController::class, 'create'])->middleware(['auth', 'verified'])->name('posts.create');
+
+// Route::post('/posts', [PostController::class, 'store'])->middleware(['auth', 'verified'])->name('posts.store');
+
+// Route::get('/posts/{post}', [PostController::class, 'show'])->middleware(['auth', 'verified'])->name('posts.show');
+
+// Route::get('/posts/{post}/edit', [PostController::class, 'edit'])->middleware(['auth', 'verified'])->name('posts.edit');
+
+// Route::patch('/posts/{post}', [PostController::class, 'update'])->middleware(['auth', 'verified'])->name('posts.update');
+
+// Route::delete('/posts/{post}', [PostController::class, 'destory'])->middleware(['auth', 'verified'])->name('posts.destory');
+
+
+
+//上記をコメントアウトして、以下の記述で大丈夫な理由は、
+//CRUDを使用する際は、あらかじめ今回命名したコントローラーの
+//function名で設定しておく必要がある。
+Route::resource('posts', PostController::class)->middleware(['auth', 'verified']);
